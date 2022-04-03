@@ -1,0 +1,8 @@
+{
+  "leafs/leaf":"V3.0-rc",
+  "require": {
+    "leafs/leaf": "v3.0-rc",
+    "leafs/db": "^1.0",
+    "leafs/form": "^1.0"
+  }
+}

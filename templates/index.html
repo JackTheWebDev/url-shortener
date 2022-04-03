@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>URL Shortener</title>
+    <link rel="stylesheet" href="styles/main.css">
+  </head>
+  <body>
+    <h1>Url Shortener</h1>
+
+    <form>
+      <input type="text" name="url" id="url">
+      <input type="submit" id="submitButton" onsubmit="return false;">
+    </form>
+    <a href="" target="_blank" id="output_url"></a>
+
+    <script>
+
+    function isValidHttpUrl(string) {
+        let url;
+
+        try {
+          url = new URL(string);
+        } catch (_) {
+          return false;
+        }
+
+        return url.protocol === "http:" || url.protocol === "https:";
+      }
+
+
+      // keep the page from refreshing when the user submits the form
+      document.getElementById("submitButton").addEventListener('click',(event) =>{
+        event.preventDefault();
+
+        document.getElementById("output_url").href = ""; 
+
+        var url = document.getElementById("url").value
+
+        if(!isValidHttpUrl(url)){
+          document.getElementById("output_url").innerText = "Invalid URL";
+          return;
+        }
+
+        var data = {
+          "url":url
+        }
+
+        fetch("/shorten",{
+          method:"POST",
+          body: JSON.stringify(data)
+        }).then(res => {
+          return res.text().then(function(text){
+
+            console.log(text);
+
+            document.getElementById("output_url").innerText = "http://"+window.location.host + "/?s="+JSON.parse(text)["id"];
+            document.getElementById("output_url").href = "http://"+window.location.host + "/?s="+JSON.parse(text)["id"];
+
+          })
+        });
+
+
+      });
+    </script>
+
+
+  </body>
+</html>
